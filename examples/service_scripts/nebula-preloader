@@ -1,0 +1,28 @@
+#!/bin/bash
+
+ZIP_LOCATION=""
+
+renderConfig(){
+    mkdir -p /tmp/nebula
+    /usr/bin/unzip -o $ZIP_LOCATION -d /tmp/nebula >/dev/null 2>&1
+    if  [[ -f /tmp/nebula/ca.crt ]] && [[ -f /tmp/nebula/host.crt ]] && [[ -f /tmp/nebula/host.key ]] && [[ -f /tmp/nebula/config.yml ]]
+    then
+        cp /tmp/nebula/ca.crt /etc/nebula/ca.crt
+        cp /tmp/nebula/host.crt /etc/nebula/host.crt
+        cp /tmp/nebula/host.key /etc/nebula/host.key
+        cp /tmp/nebula/config.yml /etc/nebula/config.yml
+        return 0
+    fi
+    return 1
+
+}
+
+
+if [ -f $1 ]
+then
+    ZIP_LOCATION=$1
+    renderConfig
+else
+    exit 0
+fi
+

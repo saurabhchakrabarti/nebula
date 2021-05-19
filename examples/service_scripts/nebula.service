@@ -6,6 +6,7 @@ Before=sshd.service
 
 [Service]
 SyslogIdentifier=nebula
+ExecStartPre=/usr/local/bin/nebula-preloader.sh /tmp/nebula.zip
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/local/bin/nebula -config /etc/nebula/config.yml
 Restart=always

@@ -14,6 +14,13 @@ else
 	GOVERSION := $(shell go version | awk '{print substr($$3, 3)}')
 	GOISMIN := $(shell expr "$(GOVERSION)" ">=" "$(GOMINVERSION)")
 	NEBULA_CMD_SUFFIX =
+        PKG_NAME=Nebula
+	PKG_DESCRIPTION="Nebula Tunnels"
+	PKG_VERSION=${BUILD_NUMBER}
+	PKG_RELEASE=${BUILD_NUMBER}
+	PKG_MAINTAINER="Lazy Guy \<someone@somewhere.com\>"
+	PKG_DEB=${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_
+	FPM_OPTS=-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION)
 	NULL_FILE = /dev/null
 endif
 
@@ -66,7 +73,7 @@ all: $(ALL:%=build/%/nebula) $(ALL:%=build/%/nebula-cert)
 
 release: $(ALL:%=build/nebula-%.tar.gz)
 
-release-linux: $(ALL_LINUX:%=build/nebula-%.tar.gz)
+release-linux: $(ALL_LINUX:%=build/nebula-%.tar.gz) $(ALL_LINUX:%=build/nebula-%.deb)
 
 release-freebsd: build/nebula-freebsd-amd64.tar.gz
 
@@ -116,6 +123,18 @@ build/nebula-%.tar.gz: build/%/nebula build/%/nebula-cert
 
 build/nebula-%.zip: build/%/nebula.exe build/%/nebula-cert.exe
 	cd build/$* && zip ../nebula-$*.zip nebula.exe nebula-cert.exe
+
+build/nebula-%.deb: build/%/nebula 
+	mkdir -p build/$*/nebula_${BUILD_NUMBER}_$*/usr/local/bin/
+	cp build/$*/nebula examples/service_scripts/nebula-preloader \
+	       	build/$*/nebula_${BUILD_NUMBER}_$*/usr/local/bin/
+	mkdir -p build/$*/nebula_${BUILD_NUMBER}_$*/etc/systemd/system/
+	cp examples/service_scripts/nebula.service \
+	       	build/$*/nebula_${BUILD_NUMBER}_$*/etc/systemd/system/
+	chmod -R g-w build/$*/*
+	fpm -t deb -p build/$*/$(PKG_DEB)$*.deb $(FPM_OPTS) -a $* -C build/$*/nebula_${BUILD_NUMBER}_$* \
+		etc usr
+
 
 vet:
 	go vet -v ./...
