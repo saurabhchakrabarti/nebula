@@ -29,8 +29,6 @@ jobs:
 
       - name: Build
         run: |
-          apt-get install ruby ruby-dev rubygems build-essential
-          gem install fpm
           make BUILD_NUMBER="${GITHUB_REF#refs/tags/v}" release-linux release-freebsd
           mkdir release
           mv build/*.tar.gz release
