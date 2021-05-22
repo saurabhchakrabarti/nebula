@@ -17,6 +17,15 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Set up fpm
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+      - name: Install fpm 
+        run: gem install fpm
+
 
       - name: Build
         run: |
