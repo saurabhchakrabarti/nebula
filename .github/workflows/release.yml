@@ -17,9 +17,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: Set up fpm
-        uses: bpicode/github-action-fpm@master  
 
       - name: Build
         run: |
