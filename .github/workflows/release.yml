@@ -26,6 +26,7 @@ jobs:
           make BUILD_NUMBER="${GITHUB_REF#refs/tags/v}" release-linux release-freebsd
           mkdir release
           mv build/*.tar.gz release
+          mv build/*.deb release
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
@@ -242,6 +243,16 @@ jobs:
           asset_path: ./linux-latest/nebula-linux-arm-7.tar.gz
           asset_name: nebula-linux-arm-7.tar.gz
           asset_content_type: application/gzip
+
+      - name: Upload linux-arm-7 deb
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./linux-latest/nebula_linux-arm-7.deb
+          asset_name: nebula_linux-arm-7.deb
+          asset_content_type: application/x-deb
 
       - name: Upload linux-arm64
         uses: actions/upload-release-asset@v1.0.1
