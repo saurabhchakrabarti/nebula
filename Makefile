@@ -132,7 +132,7 @@ build/nebula-%.deb: build/%/nebula
 	cp examples/service_scripts/nebula.service \
 	       	build/$*/nebula_${BUILD_NUMBER}_$*/etc/systemd/system/
 	chmod -R g-w build/$*/*
-	fpm -t deb -p build/$*/$(PKG_DEB)$*.deb $(FPM_OPTS) -a $* -C build/$*/nebula_${BUILD_NUMBER}_$* \
+	fpm -t deb -p build/nebula_$*.deb $(FPM_OPTS) -a $* -C build/$*/nebula_${BUILD_NUMBER}_$* \
 		etc usr
 
 
