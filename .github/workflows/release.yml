@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
+        uses: bpicode/github-action-fpm@master
         run: |
           make BUILD_NUMBER="${GITHUB_REF#refs/tags/v}" release-linux release-freebsd
           mkdir release
